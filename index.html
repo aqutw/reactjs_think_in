@@ -13,21 +13,23 @@
   <script type="text/jsx">
 var ProductCategoryRow = React.createClass({
     render: function() {
-        return (<tr><th colSpan="2">{this.props.category}</th></tr>);
+        return (<tr><th colspan="2">{this.props.category}</th></tr>);
     }
 });
 
 var ProductRow = React.createClass({
     render: function() {
-        var name = this.props.product.stocked ?
-            this.props.product.name :
+        var product = this.props.product,
+            name = product.stocked ?
+            product.name :
             <span style={{color: 'red'}}>
-                {this.props.product.name}
+                {product.name}
             </span>;
+
         return (
             <tr>
                 <td>{name}</td>
-                <td>{this.props.product.price}</td>
+                <td>{product.price}</td>
             </tr>
         );
     }
@@ -35,18 +37,20 @@ var ProductRow = React.createClass({
 
 var ProductTable = React.createClass({
     render: function() {
+        
         console.log(this.props);
+
         var rows = [];
         var lastCategory = null;
-        this.props.products.forEach(function(product) {
-            if (product.name.indexOf(this.props.filterText) === -1 || (!product.stocked && this.props.inStockOnly)) {
+        this.props.products.forEach(function(v) {
+            if (v.name.indexOf(this.props.filterText) === -1 || (!v.stocked && this.props.inStockOnly)) {
                 return;
             }
-            if (product.category !== lastCategory) {
-                rows.push(<ProductCategoryRow category={product.category} key={product.category} />);
+            if (v.category !== lastCategory) {
+                rows.push(<ProductCategoryRow category={v.category} key={v.category} />);
             }
-            rows.push(<ProductRow product={product} key={product.name} />);
-            lastCategory = product.category;
+            rows.push(<ProductRow product={v} key={v.name} />);
+            lastCategory = v.category;
         }.bind(this));
         return (
             <table>
@@ -136,7 +140,8 @@ var PRODUCTS = [
   {category: 'Electronics', price: '$199.99', stocked: true, name: 'Nexus 7'}
 ];
  
-React.renderComponent(<FilterableProductTable products={PRODUCTS} />, document.body);
+//React.renderComponent(<FilterableProductTable products={PRODUCTS} />, document.body);//works
+React.render(<FilterableProductTable products={PRODUCTS} />, document.body);//works, too.
 
   </script>
 </html>
